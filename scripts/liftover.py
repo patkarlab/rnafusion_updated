@@ -9,6 +9,8 @@ sample_name = sys.argv[3]			# Sample name
 star_fusion_outfile = sys.argv[4]	# output file from star fusion
 FusionCatcher = sys.argv[5]			# output file from FusionCatcher
 squid = sys.argv[6] 				# output file from squid
+pizzly = sys.argv[7]				# output file from pizzly
+arriba = sys.argv[8]				# output file from arriba
 
 output_file = open(sample_name + '.cff','w')
 # substituting 37 for 19
@@ -123,4 +125,15 @@ if os.path.getsize(squid) != 0:
 					print ( left_chr_convert, left_pos_convert, "NA", right_chr_convert, right_chr_convert, "NA", "NA",sample_name, "Tumor", "Leukemia", "squid", split_cnt, span_cnt, left_gene, "NA", right_gene, "NA", file=output_file, sep="\t")
 else:
 	print ("Squid output was empty")
+
+if os.path.getsize(pizzly) != 0:
+	with open (pizzly,'r') as ptsv:
+		ptsv_handle = csv.reader(ptsv, delimiter = '\t')
+		header = next(ptsv_handle)
+		for plines in ptsv_handle:
+			
+
+else:
+	print ("pizzly output was empty")
+
 output_file.close()
