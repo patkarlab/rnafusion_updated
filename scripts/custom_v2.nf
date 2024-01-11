@@ -120,10 +120,10 @@ process metafusion {
 			${params.metafus_append} ${sampleId}/final.n2.cluster.xlsx > ${sampleId}/append_table.sh
 			docker run --entrypoint /bin/bash -v /home/diagnostics/pipelines/MetaFusion-Clinical:/Users/maposto/MetaFusion-Clinical -v \${path}:/Users/maposto/${sampleId} mapostolides/metafusion:readxl_writexl Users/maposto/${sampleId}/append_table.sh
 		else
-			touch ${sampleId}_metafuse.xlsx
+			${params.empty_excel} ${sampleId}_metafuse.xlsx
 		fi		
 	else
-		touch ${sampleId}_metafuse.xlsx
+		{params.empty_excel} ${sampleId}_metafuse.xlsx
 	fi
 	"""
 }
