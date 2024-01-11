@@ -9,8 +9,12 @@ sample_name = sys.argv[3]			# Sample name
 star_fusion_outfile = sys.argv[4]	# output file from star fusion
 FusionCatcher = sys.argv[5]			# output file from FusionCatcher
 squid = sys.argv[6] 				# output file from squid
+<<<<<<< HEAD
 pizzly = sys.argv[7]				# output file from pizzly
 arriba = sys.argv[8]				# output file from arriba
+=======
+arriba = sys.argv[7]				# output file from arriba
+>>>>>>> main
 
 output_file = open(sample_name + '.cff','w')
 # substituting 37 for 19
@@ -126,6 +130,7 @@ if os.path.getsize(squid) != 0:
 else:
 	print ("Squid output was empty")
 
+<<<<<<< HEAD
 if os.path.getsize(pizzly) != 0:
 	with open (pizzly,'r') as ptsv:
 		ptsv_handle = csv.reader(ptsv, delimiter = '\t')
@@ -136,4 +141,37 @@ if os.path.getsize(pizzly) != 0:
 else:
 	print ("pizzly output was empty")
 
+=======
+if os.path.getsize(arriba) != 0:
+	with open (arriba,'r') as atsv:
+		atsv_handle = csv.reader(atsv, delimiter = '\t')
+		header = next(atsv_handle)
+		for alines in atsv_handle:
+			left_gene = alines[0]
+			right_gene = alines[1]
+			left_strand = alines[2].split('/')[1]
+			right_strand = alines[3].split('/')[1]
+			LeftBreakpoint = alines[4]
+			left_chr = 'chr' + ''.join( LeftBreakpoint.split(':')[0] )
+			left_pos = LeftBreakpoint.split(':')[1]
+			convert = liftover_funtion_ucsc(left_chr, left_pos)
+			left_chr_convert = convert[0][0]
+			left_chr_convert = re.sub ("chr","", left_chr_convert, flags = re.IGNORECASE)
+			left_pos_convert = convert[0][1]
+
+			RightBreakpoint = alines[5]
+			right_chr = 'chr' + ''.join( RightBreakpoint.split(':')[0] )
+			right_pos = RightBreakpoint.split(':')[1]
+			convert_right = liftover_funtion_ucsc(right_chr, right_pos)
+			right_chr_convert = convert_right[0][0]
+			right_chr_convert = re.sub ("chr","", right_chr_convert, flags = re.IGNORECASE)
+			right_pos_convert = convert_right[0][1]
+			split_cnt = alines[9]
+			span_cnt = alines[11]
+			if ('gl' not in left_chr_convert) and ('gl' not in right_chr_convert):	# Removing regions which were not mapped in hg19
+				print ( left_chr_convert, left_pos_convert, left_strand, right_chr_convert, right_pos_convert, right_strand, "NA",sample_name, "Tumor", "Leukemia", 
+				"arriba", split_cnt, span_cnt, left_gene, "NA", right_gene, "NA", file=output_file, sep="\t")
+else:
+	print ("arriba output was empty")
+>>>>>>> main
 output_file.close()
