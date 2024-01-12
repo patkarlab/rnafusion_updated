@@ -99,6 +99,7 @@ process cff_filegen {
 }
 
 process metafusion {
+	errorStrategy 'ignore'
 	publishDir "${PWD}/Final_Output/${sampleId}/", mode: 'copy', pattern: '*_metafuse.xlsx'
 	input:
 		tuple val(sampleId), file(cff_file)
@@ -111,7 +112,12 @@ process metafusion {
 		path=`realpath ${sampleId}`
 		cp ${cff_file} ${sampleId}
 		${params.metafus_gen} ${sampleId}/${cff_file} ${sampleId} > ${sampleId}/temp.sh
-		docker run --entrypoint /bin/bash -v /home/diagnostics/pipelines/MetaFusion-Clinical:/Users/maposto/MetaFusion-Clinical -v \${path}:/Users/maposto/${sampleId} mapostolides/metafusion:readxl_writexl Users/maposto/${sampleId}/temp.sh
+		tool_cutoff=\$(grep -i 'num_tools' ${sampleId}/temp.sh | sed 's:[^0-9]::g')
+		num_tools=\$(awk 'BEGIN{FS="\t"}{print \$11}' ${cff_file} | uniq | sort | wc -l)
+		
+		if [ \${num_tools} -ge \${tool_cutoff} ]; then
+			docker run --entrypoint /bin/bash -v /home/diagnostics/pipelines/MetaFusion-Clinical:/Users/maposto/MetaFusion-Clinical -v \${path}:/Users/maposto/${sampleId} mapostolides/metafusion:readxl_writexl Users/maposto/${sampleId}/temp.sh
+		fi	
 
 		if [ -f ${sampleId}/final.n2.cluster.xlsx ];then
 			ln -s ${sampleId}/final.n2.cluster.xlsx ${sampleId}_metafuse.xlsx
@@ -139,4 +145,8 @@ workflow COVERAGE {
 	file_copy(coverage.out)
 	cff_filegen(file_copy.out)
 	metafusion(cff_filegen.out)
+}
+
+workflow.onComplete {
+	log.info ( workflow.success ? "\n\nDone! Output in the 'Final_Output' directory \n" : "Oops .. something went wrong" )
 }
