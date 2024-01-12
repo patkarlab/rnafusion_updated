@@ -89,12 +89,12 @@ process file_copy {
 process cff_filegen {
 	conda '/home/miniconda3/envs/new_base'
 	input:
-		tuple val(sampleId), path(read1)
+		val(sampleId)
 	output:
 		tuple val (sampleId), file ("*.cff")	
 	script:
 	"""
-	${params.cffgen} hg38 hg37 ${sampleId} ${PWD}/Final_Output/${sampleId}/${sampleId}.starfusion.fusion_predictions.tsv ${PWD}/Final_Output/${sampleId}/${sampleId}.fusioncatcher.fusion-genes.txt ${PWD}/Final_Output/${sampleId}/${sampleId}.squid.fusions.annotated.txt
+	${params.cffgen} hg38 hg37 ${sampleId} ${PWD}/Final_Output/${sampleId}/${sampleId}.starfusion.fusion_predictions.tsv ${PWD}/Final_Output/${sampleId}/${sampleId}.fusioncatcher.fusion-genes.txt ${PWD}/Final_Output/${sampleId}/${sampleId}.squid.fusions.annotated.txt ${PWD}/Final_Output/${sampleId}/${sampleId}.arriba.fusions.tsv
 	"""
 }
 
@@ -123,7 +123,7 @@ process metafusion {
 			${params.empty_excel} ${sampleId}_metafuse.xlsx
 		fi		
 	else
-		{params.empty_excel} ${sampleId}_metafuse.xlsx
+		${params.empty_excel} ${sampleId}_metafuse.xlsx
 	fi
 	"""
 }
@@ -137,6 +137,6 @@ workflow COVERAGE {
 	coverage(samples_ch)
 	bam(samples_ch)
 	file_copy(coverage.out)
-	cff_filegen(file_copy.out.join(samples_ch))
+	cff_filegen(file_copy.out)
 	metafusion(cff_filegen.out)
 }
