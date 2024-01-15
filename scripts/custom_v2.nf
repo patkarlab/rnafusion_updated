@@ -99,6 +99,7 @@ process cff_filegen {
 }
 
 process metafusion {
+	conda '/home/miniconda3/envs/new_base'
 	errorStrategy 'ignore'
 	publishDir "${PWD}/Final_Output/${sampleId}/", mode: 'copy', pattern: '*_metafuse.xlsx'
 	input:
@@ -120,11 +121,16 @@ process metafusion {
 		fi	
 
 		if [ -f ${sampleId}/final.n2.cluster.xlsx ];then
-			ln -s ${sampleId}/final.n2.cluster.xlsx ${sampleId}_metafuse.xlsx
-			# Filter the .xlsx and add it to the clinical fusions table in the historical_database
-			# For temp use the .xlsx file as it is
-			${params.metafus_append} ${sampleId}/final.n2.cluster.xlsx > ${sampleId}/append_table.sh
+			# Filtering the output of metafuse 
+			${params.filter_metafus} ${sampleId}/final.n2.cluster.xlsx ${sampleId}/${sampleId}_metafuse.xlsx
+			# ln -s ${sampleId}/${sampleId}_metafuse.xlsx ${sampleId}_metafuse.xlsx
+
+			# Adding it to the clinical fusions table in the historical_database			
+			${params.metafus_append} ${sampleId}/${sampleId}_metafuse.xlsx > ${sampleId}/append_table.sh
 			docker run --entrypoint /bin/bash -v /home/diagnostics/pipelines/MetaFusion-Clinical:/Users/maposto/MetaFusion-Clinical -v \${path}:/Users/maposto/${sampleId} mapostolides/metafusion:readxl_writexl Users/maposto/${sampleId}/append_table.sh
+
+			# Converting the hg19 output to hg38
+			${params.}
 		else
 			${params.empty_excel} ${sampleId}_metafuse.xlsx
 		fi		
