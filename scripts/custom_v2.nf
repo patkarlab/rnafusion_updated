@@ -101,7 +101,7 @@ process cff_filegen {
 process metafusion {
 	conda '/home/miniconda3/envs/new_base'
 	errorStrategy 'ignore'
-	publishDir "${PWD}/Final_Output/${sampleId}/", mode: 'copy', pattern: '*_metafuse.xlsx'
+	publishDir "${PWD}/Final_Output/${sampleId}/", mode: 'copy', pattern: '*_metafuse_hg38.xlsx'
 	input:
 		tuple val(sampleId), file(cff_file)
 	output:
