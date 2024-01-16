@@ -105,7 +105,7 @@ process metafusion {
 	input:
 		tuple val(sampleId), file(cff_file)
 	output:
-		tuple val (sampleId), file ("*_metafuse.xlsx")
+		tuple val (sampleId), file ("*_metafuse_hg38.xlsx")
 	script:
 	"""
 	if [ -s ${cff_file} ];then 
@@ -113,7 +113,9 @@ process metafusion {
 		path=`realpath ${sampleId}`
 		cp ${cff_file} ${sampleId}
 		${params.metafus_gen} ${sampleId}/${cff_file} ${sampleId} > ${sampleId}/temp.sh
+		# tool cutoff for docker 
 		tool_cutoff=\$(grep -i 'num_tools' ${sampleId}/temp.sh | sed 's:[^0-9]::g')
+		# No. of tools in the input cff file
 		num_tools=\$(awk 'BEGIN{FS="\t"}{print \$11}' ${cff_file} | uniq | sort | wc -l)
 		
 		if [ \${num_tools} -ge \${tool_cutoff} ]; then
@@ -123,19 +125,18 @@ process metafusion {
 		if [ -f ${sampleId}/final.n2.cluster.xlsx ];then
 			# Filtering the output of metafuse 
 			${params.filter_metafus} ${sampleId}/final.n2.cluster.xlsx ${sampleId}/${sampleId}_metafuse.xlsx
-			# ln -s ${sampleId}/${sampleId}_metafuse.xlsx ${sampleId}_metafuse.xlsx
 
 			# Adding it to the clinical fusions table in the historical_database			
 			${params.metafus_append} ${sampleId}/${sampleId}_metafuse.xlsx > ${sampleId}/append_table.sh
 			docker run --entrypoint /bin/bash -v /home/diagnostics/pipelines/MetaFusion-Clinical:/Users/maposto/MetaFusion-Clinical -v \${path}:/Users/maposto/${sampleId} mapostolides/metafusion:readxl_writexl Users/maposto/${sampleId}/append_table.sh
 
 			# Converting the hg19 output to hg38
-			${params.}
+			${params.convert_metafus} hg19 hg38 ${sampleId}/${sampleId}_metafuse.xlsx ${sampleId}_metafuse_hg38.xlsx
 		else
-			${params.empty_excel} ${sampleId}_metafuse.xlsx
+			${params.empty_excel} ${sampleId}_metafuse_hg38.xlsx
 		fi		
 	else
-		${params.empty_excel} ${sampleId}_metafuse.xlsx
+		${params.empty_excel} ${sampleId}_metafuse_hg38.xlsx
 	fi
 	"""
 }
