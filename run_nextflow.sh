@@ -22,13 +22,13 @@ for i in `cat ${samplesheet}`
 do
 	bed=$( echo ${i} | awk 'BEGIN{FS="-";OFS=""}{ $1="" ; print tolower($2)}' )
 	case $bed in
-		"ball" | "kmt2a" | "ball_tall" | "etv6runx1nv2" | "tcf3pbx1nv2" | "kmt2aaff1nv2" | "pax5etv6" | "etv6abl1" | "pax5eln" | "dux4igh" | "ebf1pdgfrb" | "ighdux4" | "tcf3pbx1" | "p190" | "etv6runx1" | "p210" | "etv6runx1i" | "kmt2aaff1" | "mef2dbcl9" | "inv2" | "inv1" | "lsc" | "fusionvallsc" | "csfir" | "mef2d" | "lyfu" | "etv6" | "runx1" | "abl1" | "dux4" | "fgfr1" | "jak2" | "pax5" | "tcf3" | "crlf2" | "pdgfrb" | "pdgfra")
+		"ball" | "kmt2a" | "ball_tall" | "etv6runx1nv2" | "tcf3pbx1nv2" | "kmt2aaff1nv2" | "pax5etv6" | "etv6abl1" | "pax5eln" | "dux4igh" | "ebf1pdgfrb" | "ighdux4" | "tcf3pbx1" | "p190" | "etv6runx1" | "p210" | "etv6runx1i" | "kmt2aaff1" | "mef2dbcl9" | "inv2" | "inv1" | "lsc" | "fusionvallsc" | "csfir" | "mef2d" | "lyfu" | "etv6" | "runx1" | "abl1" | "dux4" | "fgfr1" | "jak2" | "pax5" | "tcf3" | "crlf2" | "pdgfrb" | "abl" | "igh" | "znf384" | "epor")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/BALLlymphoid_fusion02062022_hg38.bed"
 		;;
 		"tall")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/T-ALL02062022_hg38.bed"
 		;;
-		"myfu" | "eofu" | "kmt2amllt3" | "crebbp" | "myh11" | "mecom" | "1" | "2" | "3" | "4" | "nup98" | "alk")
+		"myfu" | "eofu" | "kmt2amllt3" | "crebbp" | "myh11" | "mecom" | "1" | "2" | "3" | "4" | "nup98" | "alk" | "picam" | "mllt10" | "pdgfra" )
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/myeloid_fusion02062022_hg38.bed"
 		;;
 		"abg" | "rar" | "f" | "f1" | "f3")
@@ -42,6 +42,9 @@ do
 		;;
 		"r" | "rna" | "lp1")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/TALL_RNA_hg38_ensembl.bed"
+		;;
+		"rarabg")
+		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/RAR_ABG_hg38.bed"
 		;;
 		#"newalp" | "newalp_rna" | "rna")
 		#bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/Leukemia_Panel_Myeloid_2023_Feb_hg38_sortd.bed"
