@@ -23,4 +23,4 @@ for csvfilename in csvfilenames:
 		new_sheet_name = os.path.splitext(sheetname)[0]
 		new_sheet_name = re.sub (sample,"", new_sheet_name, flags = re.IGNORECASE)
 		df.to_excel(writer,sheet_name=new_sheet_name, index=False)
-writer.save()
+writer.close()

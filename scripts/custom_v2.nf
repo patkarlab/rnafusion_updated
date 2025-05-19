@@ -86,6 +86,45 @@ process file_copy {
 	"""
 }
 
+process fusviz_all_samples {
+	publishDir "${PWD}/Final_Output/", mode: 'copy', pattern: 'sv_output'
+
+	input:
+		val all_samples 
+
+	output:
+		path "sv_output"
+
+	script:
+	"""
+	mkdir -p sv_input
+
+	sample_ids="${all_samples.join(' ')}"
+
+	for sampleId in \$sample_ids; do
+		mkdir -p sv_input/\$sampleId
+
+		if [ -f ${PWD}/arriba/\${sampleId}.arriba.fusions.tsv ]; then
+			cp ${PWD}/arriba/\$sampleId.arriba.fusions.tsv sv_input/\${sampleId}/Arriba.tsv
+		fi
+
+		if [ -f ${PWD}/fusioncatcher/\${sampleId}.fusioncatcher.fusion-genes.txt ]; then
+			cp ${PWD}/fusioncatcher/\$sampleId.fusioncatcher.fusion-genes.txt sv_input/\${sampleId}/Fusioncatcher.txt
+		fi
+
+		if [ -f ${PWD}/starfusion/\${sampleId}.starfusion.fusion_predictions.tsv ]; then
+			cp ${PWD}/starfusion/\$sampleId.starfusion.fusion_predictions.tsv sv_input/\${sampleId}/STAR-fusion.tsv
+		fi
+	done
+
+	export PERL5LIB="\$PERL5LIB:/home/diagnostics/pipelines/nf-core/rnafusion/scripts/SV_standard/lib"
+
+	perl ${params.sv_standard} --genome hg38 --type RNA --anno ${params.sv_anno} --input sv_input --output sv_output
+	"""
+}
+
+
+
 process cff_filegen {
 	conda '/home/miniconda3/envs/new_base'
 	input:
@@ -142,18 +181,20 @@ process metafusion {
 }
 
 workflow COVERAGE {
+
 	Channel
 		.fromPath(params.input)
 		.splitCsv(header:false)
 		.set { samples_ch }
+
 	main:
 	coverage(samples_ch)
 	bam(samples_ch)
 	file_copy(coverage.out)
+	fusviz_all_samples(file_copy.out.collect())
 	cff_filegen(file_copy.out)
 	metafusion(cff_filegen.out)
 }
-
 workflow.onComplete {
 	log.info ( workflow.success ? "\n\nDone! Output in the 'Final_Output' directory \n" : "Oops .. something went wrong" )
 }

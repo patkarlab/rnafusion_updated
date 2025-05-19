@@ -12,9 +12,9 @@ do
 	R1=$(ls $sequences/${samples}_S* | grep -i '_R1_')
 	R2=$(ls $sequences/${samples}_S* | grep -i '_R2_')
 	echo "$samples,$R1,$R2,forward" >> samplesheet.csv	
-done 
+done
 
-nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker -resume > ${log_file}
+#nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker -resume -with-report report-config.html > ${log_file}
 #nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker > ${log_file}
 
 > ${samplesheet}_bedmap
@@ -28,7 +28,7 @@ do
 		"tall")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/T-ALL02062022_hg38.bed"
 		;;
-		"myfu" | "eofu" | "kmt2amllt3" | "crebbp" | "myh11" | "mecom" | "1" | "2" | "3" | "4" | "nup98" | "alk" | "picam" | "mllt10" | "pdgfra" )
+		"myfu" | "eofu" | "kmt2amllt3" | "crebbp" | "myh11" | "mecom" | "1" | "2" | "3" | "4" | "nup98" | "alk" | "alk1" | "picam" | "mllt10" | "pdgfra" | "pdgra" | "picalm" | "nup214" | "aml" | "cbfb" | "cbfa2t3")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/myeloid_fusion02062022_hg38.bed"
 		;;
 		"abg" | "rar" | "f" | "f1" | "f3")
@@ -43,6 +43,9 @@ do
 		"r" | "rna" | "lp1")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/TALL_RNA_hg38_ensembl.bed"
 		;;
+		"p190" | "p210" | "cdna" | "normal")
+		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/RADICAL_hg38.bed"
+		;;
 		"rarabg")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/RAR_ABG_hg38.bed"
 		;;
@@ -56,9 +59,9 @@ do
 echo "${i},${bedfile}" >> ${samplesheet}_bedmap
 done
 
-nextflow -C /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom.config run /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom_v2.nf -entry COVERAGE -resume --input ${samplesheet}_bedmap > ${log_file}.coverage
+#nextflow -C /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom.config run /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom_v2.nf -entry COVERAGE -resume --input ${samplesheet}_bedmap > ${log_file}.coverage
 
-#nextflow -C /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom.config run /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom_v2.nf -entry COVERAGE --input ${samplesheet}_bedmap > ${log_file}.coverage
+nextflow -C /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom.config run /home/diagnostics/pipelines/nf-core/rnafusion/scripts/custom_v2.nf -entry COVERAGE --input ${samplesheet}_bedmap > ${log_file}.coverage
 
 #for samples in `cat ${samplesheet}`
 #do
