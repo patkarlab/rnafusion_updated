@@ -28,7 +28,7 @@ do
 		"tall")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/T-ALL02062022_hg38.bed"
 		;;
-		"myfu" | "eofu" | "kmt2amllt3" | "crebbp" | "myh11" | "mecom" | "1" | "2" | "3" | "4" | "nup98" | "alk" | "alk1" | "picam" | "mllt10" | "pdgfra" | "pdgra" | "picalm" | "nup214" | "aml" | "cbfb" | "cbfa2t3")
+		"myfu" | "eofu" | "kmt2amllt3" | "crebbp" | "myh11" | "mecom" | "1" | "2" | "3" | "4" | "nup98" | "alk" | "alk1" | "picam" | "mllt10" | "pdgfra" | "pdgra" | "picalm" | "nup214" | "aml" | "cbfb" | "cbfa2t3" | "eosi")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/myeloid_fusion02062022_hg38.bed"
 		;;
 		"abg" | "rar" | "f" | "f1" | "f3")
