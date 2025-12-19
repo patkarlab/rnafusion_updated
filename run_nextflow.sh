@@ -49,6 +49,9 @@ do
 		"rarabg")
 		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/RAR_ABG_hg38.bed"
 		;;
+		"radical")
+		bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/RADICALv2_hg38_sortd.bed"
+		;;
 		#"newalp" | "newalp_rna" | "rna")
 		#bedfile="/home/diagnostics/pipelines/nf-core/rnafusion/bedfiles/Leukemia_Panel_Myeloid_2023_Feb_hg38_sortd.bed"
 		#;;
