@@ -14,7 +14,7 @@ do
 	echo "$samples,$R1,$R2,forward" >> samplesheet.csv	
 done
 
-#nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker -resume -with-report report-config.html > ${log_file}
+nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker -resume -with-report report-config.html > ${log_file}
 #nextflow run ./ --all --input samplesheet.csv --outdir /home/diagnostics/pipelines/nf-core/rnafusion --genome GRCh38 -profile docker > ${log_file}
 
 > ${samplesheet}_bedmap

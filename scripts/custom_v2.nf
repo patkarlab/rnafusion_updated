@@ -182,13 +182,12 @@ process metafusion {
 
 process dashboard {
 	input:
-		tuple val(sampleId), path(read1)
+		tuple val(sampleId)
 	output:
 		tuple val (sampleId)
 	script:
 	"""
 	python3 /home/diagnostics/pipelines/nf-core/rnafusion/bin/generate_Illumina_dashboard_v31.py --fusions ${PWD}/Final_Output/${sampleId}/${sampleId}.xlsx --cytoband ${params.cytoBand} --output ${PWD}/Final_Output/${sampleId}/${sampleId}_dashboard.html
-
 	"""
 }
 workflow COVERAGE {
@@ -204,7 +203,7 @@ workflow COVERAGE {
 	fusviz_all_samples(file_copy.out.collect())
 	cff_filegen(file_copy.out)
 	metafusion(cff_filegen.out)
-	//dashboard(samples_ch)
+	dashboard(file_copy.out)
 }
 workflow.onComplete {
 	log.info ( workflow.success ? "\n\nDone! Output in the 'Final_Output' directory \n" : "Oops .. something went wrong" )
